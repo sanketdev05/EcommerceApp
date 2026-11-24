@@ -15,9 +15,6 @@ const app = express()
 const rawJson = express.raw({type: "application/json", limit: "1mb"})
 
 app.post("/webhook/clerk", rawJson, async(req, res, next)=>{
-    console.log("WEBHOOK ROUTE HIT");
-    console.log("Body is Buffer:", Buffer.isBuffer(req.body));
-    console.log("Body size:", req.body?.length);
 
     try {
         await clerkWebhookHandler(req, res)
