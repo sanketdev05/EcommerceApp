@@ -12,10 +12,19 @@ const env =  getEnv()
 const app = express()
 
 // it's important that you don't parse the webhook event data, it should be in the raw format
-const rawJson = express.raw({type: "application/json", limit: " 1mb"})
+const rawJson = express.raw({type: "application/json", limit: "1mb"})
 
-app.post("/webhook/clerk", rawJson,(req, res)=>{
-    clerkWebhookHandler(req, res)
+app.post("/webhook/clerk", rawJson, async(req, res, next)=>{
+    console.log("WEBHOOK ROUTE HIT");
+    console.log("Body is Buffer:", Buffer.isBuffer(req.body));
+    console.log("Body size:", req.body?.length);
+
+    try {
+        await clerkWebhookHandler(req, res)
+    } catch (error) {
+        next(error);
+    }
+    
 })
 
 app.use(express.json())
